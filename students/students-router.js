@@ -20,4 +20,15 @@ router.get('/', async (req,res) => {
     }
 })
 
+router.get('/:id', async (req,res) => {
+    try {
+        const student = await db('students')
+            .where({ id: req.params.id })
+            .first()
+        res.status(200).json(student)    
+    } catch (error) {
+        res.status(500).json(error)
+    }
+})
+
 module.exports = router
