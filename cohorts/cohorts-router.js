@@ -82,4 +82,14 @@ router.delete('/:id', async (req,res) => {
     }
 })
 
+router.get('/:id/students', async (req,res) => {
+    try {
+        const students = await db('students')
+            .where({ cohort_id: req.params.id })
+        res.status(200).json(students)
+    } catch (error) {
+        res.status(500).json(error)
+    }
+})
+
 module.exports = router
