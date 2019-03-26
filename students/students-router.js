@@ -33,11 +33,30 @@ router.get('/:id', async (req,res) => {
     }
 })
 
-router.post('/', async (req,res) => {
+router.post('/', propChecker, async (req,res) => {
     try {
         const [id] = await db('students')
             .insert(req.body)
         res.status(201).json(id)    
+    } catch (error) {
+        res.status(500).json(error)
+    }
+})
+
+router.put('/:id', propChecker, async (req,res) => {
+    try {
+        const count = db('students')
+            .where({ id: req.params.id })
+            .update(req.body)
+        if (count > 0) {
+            const student = await db('students')
+                .where({ id: req.params.id })
+            res.status(200).json(student)    
+        } else {
+            res.status(404).json({
+                message: "Student not found!"
+            })
+        }   
     } catch (error) {
         res.status(500).json(error)
     }
