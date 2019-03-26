@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const knex = require('knex');
 
+const propChecker = require('../middleware/propChecker.js')
+
 const knexConfig = {
     client: 'sqlite3',
     useNullAsDefault: true,
@@ -24,8 +26,18 @@ router.get('/:id', async (req,res) => {
     try {
         const cohort = await db('cohorts')
             .where({ id: req.params.id })
-            .first()
+            .first() 
         res.status(200).json(cohort)    
+    } catch (error) {
+        res.status(500).json(error)
+    }
+})
+
+router.post('/', propChecker, async (req,res) => {
+    try {
+        const [id] = await db('cohorts')
+            .insert(req.body)
+        res.status(201).json(id)    
     } catch (error) {
         res.status(500).json(error)
     }
