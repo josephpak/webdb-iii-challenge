@@ -62,4 +62,23 @@ router.put('/:id', propChecker, async (req,res) => {
     }
 })
 
+router.delete('/:id', async (req,res) => {
+    try {
+        const count = await db('students')
+            .where({ id: req.params.id })
+            .del()
+
+        if (count > 0) {
+            res.status(200).json(count)
+        } else {
+            res.status(404).json({
+                message: "Student not found"
+            })
+        }   
+
+    } catch (error) {
+        res.status(500).json(error)
+    }
+})
+
 module.exports = router
